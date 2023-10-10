@@ -13,6 +13,9 @@ result_completion = {}
 task_que = Queue(10)
 
 
+"""
+Pushes the request into a queue
+"""
 def queue_openai_response(message, request_id):
     print("request id is: " + request_id)
     result_completion[request_id] = False
@@ -22,6 +25,9 @@ def queue_openai_response(message, request_id):
     # response = await Openai_calls.get_roast(message)
 
 
+"""
+Check if there is an element in the queue and start processing the response if there is
+"""
 async def get_open_ai_response():
     while True:
         if not task_que.empty():
@@ -35,6 +41,9 @@ async def get_open_ai_response():
             await asyncio.sleep(1)
 
 
+"""
+Gets the request with the message to respond to. Returns a request_id that would represent the result to the particular message
+"""
 @app.route('/', methods=['POST'])
 def receiving_request():
     data = request.data.decode()
@@ -43,6 +52,9 @@ def receiving_request():
     return request_id, 200
 
 
+"""
+Responds to whether the response has finished processing
+"""
 @app.route('/retrieve', methods=['POST'])
 def responding_to_request():
     request_id = request.data.decode()
@@ -69,5 +81,6 @@ if __name__ == "__main__":
     flask_thread = threading.Thread(target=app.run)
     processing_thread = threading.Thread(target=run_async_loop)
 
+    #run the flask and processing on separate threads so both can be running at the same time
     flask_thread.start()
     processing_thread.start()

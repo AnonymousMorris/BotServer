@@ -4,11 +4,10 @@ from langchain.schema import SystemMessage, HumanMessage, AIMessage
 key = ""
 chat = ChatOpenAI(openai_api_key=key)
 chat2 = ChatOpenAI(openai_api_key=key, temperature=0)
-import tracemalloc
 
-tracemalloc.start()
-
-
+"""
+The function gets an initial response with two different system prompt
+"""
 def response(msg, option):
     global prompt
     print("requesting")
@@ -29,6 +28,11 @@ def response(msg, option):
     return result.content
 
 
+"""
+Improves the responses passed into it
+@:param msg is the initial question the user asks
+@:param ans_arr is the ai responses we want to improve on
+"""
 def improve_response(msg, ans_arr):
     options = ""
     for i in range(len(ans_arr)):
@@ -53,6 +57,12 @@ def improve_response(msg, ans_arr):
     return format_result.content
 
 
+"""
+This method chooses the best roast out of all the options
+@:param improved options is the options that were improved
+@:param original_options is the options originally generated
+"""
+
 def choose_roast(improved_options, original_option):
     format_option = improved_options + "\n"
     for i in range(len(original_option)):
@@ -74,6 +84,9 @@ def choose_roast(improved_options, original_option):
     return processed.content
 
 
+"""
+Returns the roast to the msg passed in
+"""
 def get_roast(msg):
     print("getting roast")
     msg = msg
